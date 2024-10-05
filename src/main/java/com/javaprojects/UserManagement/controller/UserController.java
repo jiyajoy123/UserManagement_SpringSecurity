@@ -1,38 +1,36 @@
 package com.javaprojects.UserManagement.controller;
 
+import com.javaprojects.UserManagement.config.UserRegistrationDto;
+import com.javaprojects.UserManagement.model.AppUser;
 import com.javaprojects.UserManagement.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
-@RestController
-@RequestMapping("/api")
+@Controller
 public class UserController {
 
-    @Autowired
-    private UserService userService;
+    @Controller
+    public class RegistrationController {
 
-    @PostMapping("/register")
-    public ResponseEntity<String> registerUser(@RequestBody User user) {
-        userService.saveUser(user);
-        return ResponseEntity.ok("User registered successfully!");
+        @Autowired
+        private UserService userService;
+
+        @GetMapping("/register")
+        public String showRegistrationForm(Model model) {
+            model.addAttribute("user", new UserRegistrationDto());
+            return "register";
+        }
+
+        @PostMapping("/register")
+        public String registerUserAccount(@ModelAttribute("user") UserRegistrationDto registrationDto) {
+            userService.registerNewUser(registrationDto);
+            return "redirect:/register?success";
+        }
     }
 
-    @GetMapping("/user/{id}")
-    @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<User> getUser(@PathVariable Long id) {
-        // Logic to return the authenticated user's profile
-        return (ResponseEntity<User>) ResponseEntity.ok();
     }
 
-    @GetMapping("/admin/users")
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<List<User>> getAllUsers() {
-        // Logic to return all users for admins
-        return (ResponseEntity<List<User>>) ResponseEntity.ok();
-    }
-}

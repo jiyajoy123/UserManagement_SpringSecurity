@@ -5,20 +5,25 @@
 </head>
 <body>
 <h1>Register</h1>
-<form action="#" th:action="@{/register}" th:object="${user}" method="post">
-    <label>Username:</label>
-    <input type="text" th:field="*{username}" /><br/>
-
-    <label>Password:</label>
-    <input type="password" th:field="*{password}" /><br/>
-
-    <label>Role:</label>
-    <select th:field="*{role}">
-        <option value="USER">USER</option>
-        <option value="ADMIN">ADMIN</option>
-    </select><br/>
-
-    <button type="submit">Register</button>
+<form action="#" th:action="@{/register}" method="post">
+    <div>
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required/>
+    </div>
+    <div>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required/>
+    </div>
+    <div>
+        <label for="role">Role:</label>
+        <input type="text" id="role" name="role" required/>
+    </div>
+    <div>
+        <input type="submit" value="Register"/>
+    </div>
+    <div th:if="${error}">
+        <span style="color: red;" th:text="${error}"></span>
+    </div>
 </form>
 </body>
 </html>
